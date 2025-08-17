@@ -25,7 +25,7 @@ const RegionNavbar = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-transparent"></div>
         <div className="relative z-10 text-center py-16 px-4">
           <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-white to-red-400 tracking-wider mb-6 drop-shadow-2xl animate-pulse">
-            VALORANT
+            ESPORTS
           </h1>
           <h2 className="text-3xl md:text-5xl font-bold text-white tracking-widest uppercase mb-4">
             Regional Rankings
