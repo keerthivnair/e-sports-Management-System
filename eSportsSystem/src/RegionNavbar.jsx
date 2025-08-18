@@ -20,7 +20,7 @@ const RegionNavbar = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-      {/* Hero Header */}
+      {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-transparent"></div>
         <div className="relative z-10 text-center py-16 px-4">
@@ -52,9 +52,10 @@ const RegionNavbar = () => {
           {shortNames.map(({ key, name, flag }, index) => (
             <Link key={key} to={`/rankings/${key}`}>
               <div
-                className="group relative cursor-pointer transform transition-all duration-500 hover:scale-110 hover:-translate-y-2"
+                className="group relative cursor-pointer transform transition-all duration-500 hover:scale-110 hover:-translate-y-2" // tranform for the smooth trans-hover...smooth not abrupt
                 style={{
-                  animationDelay: `${index * 100}ms`
+                  animationDelay: `${index * 100}ms` // no animations yet this is just your reminder maybe if you plan to keep
+                                                     // any animation theres a delay cause mapp!
                 }}
               >
                 {/* Main Card */}
