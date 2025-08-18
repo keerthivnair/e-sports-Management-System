@@ -16,7 +16,7 @@ const Rankings = () => {
     try {
       const response = await fetch(url);
       const json = await response.json();
-      console.log(json);
+      console.log("THe imported content:",json);
       setRankingsData(json.data || []);
     } catch (error) {
       console.log(error);
