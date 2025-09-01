@@ -32,11 +32,6 @@ const RegionNavbar = () => {
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-red-500 to-white mx-auto rounded-full"></div>
         </div>
-        
-        {/* Floating geometric shapes */}
-        <div className="absolute top-20 left-10 w-16 h-16 border-2 border-red-500/30 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-20 right-16 w-8 h-8 bg-white/10 rotate-12 animate-bounce"></div>
-        <div className="absolute top-1/2 right-20 w-12 h-12 border border-white/20 rounded-full animate-ping"></div>
       </div>
 
       {/* Region Selection Grid */}
@@ -50,44 +45,19 @@ const RegionNavbar = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
           {shortNames.map(({ key, name, flag }, index) => (
-            <Link key={key} to={`/rankings/${key}`}>
-              <div
-                className="group relative cursor-pointer transform transition-all duration-500 hover:scale-110 hover:-translate-y-2" // tranform for the smooth trans-hover...smooth not abrupt
-                style={{
-                  animationDelay: `${index * 100}ms` // no animations yet this is just your reminder maybe if you plan to keep
-                                                     // any animation theres a delay cause mapp!
-                }}
-              >
-                {/* Main Card */}
+            <div key={key} className="group relative cursor-pointer">
+              {/* Link to Rankings */}
+              <Link to={`/rankings/${key}`}>
                 <div className="relative bg-gradient-to-br from-gray-900 via-black to-gray-800 border-2 border-gray-700 hover:border-red-400 rounded-xl p-4 md:p-6 h-32 md:h-40 flex flex-col items-center justify-center transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/30">
-                  {/* Flag/Icon */}
                   <div className="text-3xl md:text-4xl mb-2 group-hover:scale-125 transition-transform duration-300">
                     {flag}
                   </div>
-
-                  {/* Region Name */}
                   <h4 className="text-sm md:text-base font-black tracking-wider text-center uppercase text-white group-hover:text-red-400 transition-all duration-300">
                     {name}
                   </h4>
-
-                  {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                  {/* Corner Accents */}
-                  <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-red-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-red-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                  {/* Animated Border Lines */}
-                  <div className="absolute inset-0 overflow-hidden rounded-xl">
-                    <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-red-500/60 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    <div className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-l from-transparent via-red-500/60 to-transparent transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
-                  </div>
                 </div>
-
-                {/* Floating Highlight */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-red-500 via-transparent to-red-500 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10"></div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       </div>
