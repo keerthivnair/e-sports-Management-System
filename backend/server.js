@@ -1,11 +1,14 @@
 const express = require("express")
 const mongoose = require("mongoose")
-const axios = require("axios");
+const axios = require("axios"); 
 const app = express()
-
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
+const recommendationRoutes = require("./recommendations");
+
+
+app.use("/", recommendationRoutes); 
 
 const shortNames = [
     { key: "na", name: "North America", flag: "🇺🇸" },
@@ -23,6 +26,8 @@ const shortNames = [
     { key: "col", name: "Collegiate", flag: "🎓" }
   ];
 
+// db connection
+
 async function connectDb() {
     try {
         await mongoose.connect("mongodb+srv://user:user@cluster0.oqqeksu.mongodb.net/db")
@@ -33,6 +38,35 @@ async function connectDb() {
     }
 }
 
+// stats
+
+const playerDetailsSchema = new mongoose.Schema({
+        "player": String,
+        "org": String,
+        "agents": [String],
+        "rounds_played": String,
+        "rating": String,
+        "average_combat_score": String,
+        "kill_deaths": String,
+        "kill_assists_survived_traded": String,
+        "average_damage_per_round": String,
+        "kills_per_round": String,
+        "assists_per_round": String,
+        "first_kills_per_round": String,
+        "first_deaths_per_round": String,
+        "headshot_percentage": String,
+        "clutch_success_percentage": String
+})
+
+const statsSchema = new mongoose.Schema({
+    "status":Number,
+    "region":String,
+    "segments":[playerDetailsSchema]
+})
+
+const statsModel = new mongoose.model("Stats",statsSchema)
+
+//rankings
 
 const teamSchema = new mongoose.Schema({
   rank: String,
@@ -44,8 +78,7 @@ const teamSchema = new mongoose.Schema({
   record: String,
   earnings: String,
   logo: String
-});
-
+})
 
 const rankingsSchema = new mongoose.Schema({
     "status": Number,
@@ -56,13 +89,13 @@ const rankingsSchema = new mongoose.Schema({
 const rankingsModel = new mongoose.model("Rankings",rankingsSchema)
 
 
+// functions to fetch from api - vlr.gg
 
 
-
-async function insertDataFromApi() {
+async function insertDataFromApi_rankings() {
     try {
         for(const data of shortNames){
-            const count = await rankingsModel.countDocuments();
+            let count = await rankingsModel.countDocuments();
             if(count>=13){
                 console.log("table already populated from api")
                 return 
@@ -78,6 +111,27 @@ async function insertDataFromApi() {
         console.log(err)
     }
 }
+async function insertDataFromApi_stats() {
+    try {
+        for(const data of shortNames){
+            let count = await statsModel.countDocuments();
+            if(count>=13){
+                console.log("table already populated from api")
+                return 
+            }
+            const res = await axios.get(`https://vlrggapi.vercel.app/stats?region=${data.key}&timespan=all`)
+            const apiData = res.data.data
+            apiData.region = data.key
+            const newDoc = await statsModel.create(apiData)
+            console.log("Inserted:", newDoc); 
+        }     
+    }
+    catch(err) {
+        console.log(err)
+    }
+}
+
+// frontend connection - localhost/endpoints
 
 app.post("/rankings",async(req,res)=> {
     try {
@@ -99,12 +153,20 @@ app.post("/rankings",async(req,res)=> {
     }
 })
 
+
+
 app.listen(3000,() => {
     console.log("server started")
     connectDb().then(()=> {
-        insertDataFromApi()
+        insertDataFromApi_rankings()
+        insertDataFromApi_stats()
     })
 })
+
+
+module.exports = {
+    statsModel
+}
 
 
  
