@@ -7,17 +7,26 @@ const Rankings = () => {
   const region = id || "na";
   const [rankingsData, setRankingsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+ 
 
   async function fetchRankings() {
     console.log("fetching data");
     setIsLoading(true);
-    const url = `https://vlrggapi.vercel.app/rankings?region=${region}`;
+    // const url = `https://vlrggapi.vercel.app/rankings?region=${region}`;
 
     try {
-      const response = await fetch(url);
-      const json = await response.json();
-      console.log("THe imported content:",json);
-      setRankingsData(json.data || []);
+      // const response = await fetch(url);
+      // const json = await response.json();
+      // console.log("The imported content:",json);"
+      const res = await fetch("http://localhost:3000/rankings", {
+        method:"POST",
+        headers: {"Content-Type": "application/json"},
+        body:JSON.stringify({region})
+      })
+      
+      const data = await res.json()
+      console.log(data)
+      setRankingsData(data || []);
     } catch (error) {
       console.log(error);
     } finally {

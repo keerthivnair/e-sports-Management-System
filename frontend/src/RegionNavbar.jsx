@@ -44,7 +44,7 @@ const RegionNavbar = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
-          {shortNames.map(({ key, name, flag }, index) => (
+          {shortNames.map(({ key, name, flag }) => (
             <div key={key} className="group relative cursor-pointer">
               {/* Link to Rankings */}
               <Link to={`/rankings/${key}`}>
