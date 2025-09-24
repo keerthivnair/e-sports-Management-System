@@ -2,49 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 
 const EventDetails = () => {
-  const { id } = useParams(); // Event title from URL
+  const { id } = useParams(); // Event title
   const location = useLocation();
-  const view = location.state?.view || "upcoming"; // "upcoming" or "completed"
+  const view = location.state?.view || "upcoming";
 
   const [matches, setMatches] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Normalize strings for loose matching
-  const normalize = (str) =>
-    str ? str.toLowerCase().replace(/[^a-z0-9]/g, "") : "";
-
-  // Fetch matches from API
- // Fetch matches from API
-async function fetchMatches() {
-  try {
-    setIsLoading(true);
-    const q = view === "upcoming" ? "upcoming" : "results";
-    const res = await fetch(`https://vlrggapi.vercel.app/match?q=${q}`);
-    const json = await res.json();
-    const segments = json?.data?.segments || [];
-
-    // Normalize event name from URL
-    const normalizedId = normalize(id);
-
-    // Filter matches loosely by all possible event name fields
-    const filtered = segments.filter((match) => {
-      const eventName =
-        match.tournament_name ||
-        match.match_event ||
-        match.event_name || // Add this field for completed matches
-        match.series_name ||
-        "";
-      return normalize(eventName).includes(normalizedId);
-    });
-
-    setMatches(filtered);
-  } catch (error) {
-    console.error("Error fetching matches:", error);
-  } finally {
-    setIsLoading(false);
+  async function fetchMatches() {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`http://localhost:3000/matches/${view}/${id}`);
+      const json = await res.json();
+      setMatches(json);
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
-}
-
 
   useEffect(() => {
     fetchMatches();
@@ -66,9 +42,7 @@ async function fetchMatches() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-gray-900 to-red-950 text-white px-4">
         <h1 className="text-4xl font-bold mb-4">No Matches Found</h1>
-        <p className="text-gray-400 mb-6">
-          No matches are available for this event.
-        </p>
+        <p className="text-gray-400 mb-6">No matches are available for this event.</p>
         <Link
           to="/events"
           className="px-6 py-3 bg-red-600 rounded-lg font-bold hover:bg-red-500 transition"
@@ -94,7 +68,6 @@ async function fetchMatches() {
               {match.match_series || match.round_info || "Match Series"}
             </h3>
 
-            {/* Teams */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
                 {match.team1_logo ? (
@@ -125,11 +98,8 @@ async function fetchMatches() {
               </div>
             </div>
 
-            {/* Match Info */}
             {view === "upcoming" ? (
-              <p className="text-gray-400">
-                🕒 {match.time_until_match || "Time not available"}
-              </p>
+              <p className="text-gray-400">🕒 {match.time_until_match || "Time not available"}</p>
             ) : (
               <p className="text-gray-400">
                 🏆 Score: {match.score1}-{match.score2}{" "}

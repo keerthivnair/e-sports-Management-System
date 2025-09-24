@@ -88,6 +88,40 @@ const rankingsSchema = new mongoose.Schema({
 
 const rankingsModel = new mongoose.model("Rankings",rankingsSchema)
 
+// Events
+const eventSchema = new mongoose.Schema({
+  title: String,
+  thumb: String,
+  prize: String,
+  region: String,
+  dates: String,
+  status: String, // upcoming or completed
+});
+const eventsModel = mongoose.model("Events", eventSchema);
+
+// Event Matches
+const eventMatchSchema = new mongoose.Schema({
+  tournament_name: String,
+  match_event: String,
+  event_name: String,
+  series_name: String,
+  match_series: String,
+  round_info: String,
+  team1: String,
+  team2: String,
+  team1_logo: String,
+  team2_logo: String,
+  flag1: String,
+  flag2: String,
+  score1: String,
+  score2: String,
+  time_until_match: String,
+  time_completed: String,
+  status: String, // upcoming or completed
+});
+
+const eventMatchesModel = mongoose.model("EventMatches", eventMatchSchema);
+
 
 // functions to fetch from api - vlr.gg
 
@@ -131,6 +165,58 @@ async function insertDataFromApi_stats() {
     }
 }
 
+async function insertDataFromApi_events() {
+  try {
+    for (const status of ["completed", "upcoming"]) {
+      let page = 1;
+      while (true) {
+        const res = await axios.get(
+          `https://vlrggapi.vercel.app/events?q=${status}&page=${page}`
+        );
+
+        const events = res.data?.data?.segments || [];
+
+        if (events.length === 0) {
+          console.log(`No more ${status} events after page ${page - 1}`);
+          break; // stop fetching when API has no more data
+        }
+
+        const docs = events.map((e) => ({ ...e, status }));
+        await eventsModel.insertMany(docs, { ordered: false }).catch(() => {});
+
+        console.log(
+          `Inserted ${events.length} ${status} events from page ${page}`
+        );
+
+        page++;
+      }
+    }
+  } catch (error) {
+    console.error("Error inserting events:", error);
+  }
+}
+
+
+async function insertDataFromApi_eventMatches() {
+  try {
+    let count = await eventMatchesModel.countDocuments();
+    if (count > 0) return console.log("event matches already populated");
+
+    for (const status of ["results", "upcoming"]) {
+      const res = await axios.get(`https://vlrggapi.vercel.app/match?q=${status}`);
+      const matches = res.data?.data?.segments || [];
+      const docs = matches.map((m) => ({
+        ...m,
+        status: status === "results" ? "completed" : "upcoming",
+      }));
+      await eventMatchesModel.insertMany(docs);
+    }
+    console.log("Event matches inserted");
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 // frontend connection - localhost/endpoints
 
 app.post("/rankings",async(req,res)=> {
@@ -153,6 +239,40 @@ app.post("/rankings",async(req,res)=> {
     }
 })
 
+// Events
+app.get("/events/:status", async (req, res) => {
+  try {
+    const { status } = req.params; // upcoming or completed
+    const events = await eventsModel.find({ status });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Matches by event
+app.get("/matches/:status/:eventTitle", async (req, res) => {
+  try {
+    const { status, eventTitle } = req.params;
+    const normalize = (str) => (str ? str.toLowerCase().replace(/[^a-z0-9]/g, "") : "");
+    const normalizedId = normalize(eventTitle);
+
+    const matches = await eventMatchesModel.find({ status });
+    const filtered = matches.filter((match) => {
+      const eventName =
+        match.tournament_name ||
+        match.match_event ||
+        match.event_name ||
+        match.series_name ||
+        "";
+      return normalize(eventName).includes(normalizedId);
+    });
+    res.json(filtered);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 
 app.listen(3000,() => {
@@ -160,13 +280,12 @@ app.listen(3000,() => {
     connectDb().then(()=> {
         insertDataFromApi_rankings()
         insertDataFromApi_stats()
+        insertDataFromApi_events();
+        insertDataFromApi_eventMatches();
     })
 })
 
-
-module.exports = {
-    statsModel
-}
+module.exports = { statsModel};
 
 
  
