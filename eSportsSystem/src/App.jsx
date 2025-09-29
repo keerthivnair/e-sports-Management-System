@@ -3,6 +3,7 @@ import RegionNavbar from "./RegionNavbar";
 import Events from "./Events"
 import Matches from "./Matches"; // Import the Matches component
 import Rankings from "./Rankings";
+import TeamRec from "./TeamRec";
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
       <Routes>
         <Route path="rankings" element={<RegionNavbar />}>
           <Route path=":id" element={<Rankings />} />
-          
+          <Route path="teamrec/:region/:team" element={<TeamRec />} />
           <Route path="matches/:id" element={<Matches />} />
         </Route>
         <Route path="/events" element={<Events />} />

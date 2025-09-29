@@ -1,12 +1,14 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Rankings = () => {
   let { id } = useParams();
   const region = id || "na";
   const [rankingsData, setRankingsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   async function fetchRankings() {
     console.log("fetching data");
@@ -80,6 +82,7 @@ const Rankings = () => {
             {rankingsData.map(({ rank, team }, index) => (
               <div
                 key={`${rank}-${team}`}
+                onClick={() => navigate(`/teamrec/${region}/${team}`)}
                 className="group relative bg-gradient-to-r from-black via-gray-900 to-black border-2 border-gray-800 hover:border-red-500 rounded-2xl p-6 md:p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20 transform hover:-translate-y-1 cursor-pointer"
                 style={{
                   animationDelay: `${index * 100}ms`
