@@ -6,9 +6,14 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 const recommendationRoutes = require("./recommendations");
+const connectDb = require("./db/connect")
+const authRoutes = require("./auth")
+const {statsModel} = require("./models/statsmodel")
 
 
 app.use("/", recommendationRoutes); 
+app.use("/auth", authRoutes); 
+
 
 const shortNames = [
     { key: "na", name: "North America", flag: "🇺🇸" },
@@ -25,46 +30,6 @@ const shortNames = [
     { key: "jp", name: "Japan", flag: "🇯🇵" },
     { key: "col", name: "Collegiate", flag: "🎓" }
   ];
-
-// db connection
-
-async function connectDb() {
-    try {
-        await mongoose.connect("mongodb+srv://user:user@cluster0.oqqeksu.mongodb.net/db")
-        console.log("db created")
-    }
-    catch(error) {
-        console.log(error)
-    }
-}
-
-// stats
-
-const playerDetailsSchema = new mongoose.Schema({
-        "player": String,
-        "org": String,
-        "agents": [String],
-        "rounds_played": String,
-        "rating": String,
-        "average_combat_score": String,
-        "kill_deaths": String,
-        "kill_assists_survived_traded": String,
-        "average_damage_per_round": String,
-        "kills_per_round": String,
-        "assists_per_round": String,
-        "first_kills_per_round": String,
-        "first_deaths_per_round": String,
-        "headshot_percentage": String,
-        "clutch_success_percentage": String
-})
-
-const statsSchema = new mongoose.Schema({
-    "status":Number,
-    "region":String,
-    "segments":[playerDetailsSchema]
-})
-
-const statsModel = new mongoose.model("Stats",statsSchema)
 
 //rankings
 
@@ -153,7 +118,7 @@ async function insertDataFromApi_stats() {
                 console.log("table already populated from api")
                 return 
             }
-            const res = await axios.get(`https://vlrggapi.vercel.app/stats?region=${data.key}&timespan=all`)
+            const res = await axios.get(`https://vlrggapi.vercel.app/stats?region=${data.key}&timespan=90`)
             const apiData = res.data.data
             apiData.region = data.key
             const newDoc = await statsModel.create(apiData)
@@ -284,8 +249,6 @@ app.listen(3000,() => {
         insertDataFromApi_eventMatches();
     })
 })
-
-module.exports = { statsModel};
 
 
  

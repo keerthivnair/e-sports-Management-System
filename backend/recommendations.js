@@ -1,4 +1,4 @@
-const {statsModel} = require("./server")
+const {statsModel} = require("./models/statsmodel")
 const express = require("express")
 const mongoose = require("mongoose")
 const axios = require("axios"); 
@@ -17,7 +17,7 @@ router.post("/recommend",async(req,res)=> {
         if(!region || !player) {
             return res.status(400).json({error:"Region or Player not specified"})
         }
-        const regionDoc = await statsModel.findOne({region}).sort({_id: 1})
+        const regionDoc = await statsModel.findOne({region: region.toLowerCase()})
         if (!regionDoc || !regionDoc.segments.length) {
         return res.status(404).json({ error: "No players found in this region" });
     }
@@ -72,9 +72,9 @@ router.post("/recommend",async(req,res)=> {
        const weakStats = Object.keys(differences).filter(stat => differences[stat] > 0);
       
 
-       const agentScores = {}
+      const agentScores = {}
 
-       similarPlayers.forEach(p => {
+      similarPlayers.forEach(p => {
       weakStats.forEach(stat => {
       if ((parseFloat(p[stat]) || 0) >= (parseFloat(playerDoc[stat]) || 0)) {
       p.agents.forEach(agent => {
@@ -88,12 +88,16 @@ router.post("/recommend",async(req,res)=> {
        const recommendedAgents = Object.entries(agentScores)
        .sort((a,b) => b[1]-a[1])
        .map(e=>e[0])
-    
+      
+       const curr_rating =(playerDoc.rating);
+       const best_rating = bestPlayer.rating
 
-       res.json({
+      res.json({
       player: playerDoc.player,
       level,
       differences,
+      curr_rating,
+      best_rating,
       recommendedAgents,
       bestPlayer: bestPlayer.player
     });
