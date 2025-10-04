@@ -1,25 +1,33 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Rankings = () => {
   let { id } = useParams();
+  const navigate = useNavigate();
   const region = id || "na";
   const [rankingsData, setRankingsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+ 
 
   async function fetchRankings() {
     console.log("fetching data");
     setIsLoading(true);
-    const url = `https://vlrggapi.vercel.app/rankings?region=${region}`;
+    // const url = `https://vlrggapi.vercel.app/rankings?region=${region}`;
 
     try {
-      const response = await fetch(url);
-      const json = await response.json();
-      console.log("THe imported content:",json);
-      setRankingsData(json.data || []);
+      // const response = await fetch(url);
+      // const json = await response.json();
+      // console.log("The imported content:",json);"
+      const res = await fetch("http://localhost:3000/rankings", {
+        method:"POST",
+        headers: {"Content-Type": "application/json"},
+        body:JSON.stringify({region})
+      })
+      
+      const data = await res.json()
+      console.log(data)
+      setRankingsData(data || []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,10 +87,10 @@ const Rankings = () => {
           </div>
         ) : (
           <div className="grid gap-4 md:gap-6">
-            {rankingsData.map(({ rank, team }, index) => (
+            {rankingsData.map(({ rank, team, logo }, index) => (
               <div
                 key={`${rank}-${team}`}
-                onClick={() => navigate(`/teamrec/${region}/${team}`)}
+                onClick={() => navigate(`/team/${encodeURIComponent(team)}`, { state: { region } })}
                 className="group relative bg-gradient-to-r from-black via-gray-900 to-black border-2 border-gray-800 hover:border-red-500 rounded-2xl p-6 md:p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20 transform hover:-translate-y-1 cursor-pointer"
                 style={{
                   animationDelay: `${index * 100}ms`
@@ -97,10 +105,12 @@ const Rankings = () => {
 
                 {/* Team Name */}
                 <div className="ml-8 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                  <img src={logo} alt={team} className="w-12 h-12 object-contain rounded-full" />
                   <h3 className="text-2xl md:text-4xl font-black text-white tracking-wider uppercase group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-400 group-hover:to-white transition-all duration-300">
                     {team}
                   </h3>
-                  
+                  </div>
                   {/* Decorative Arrow */}
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-2">
                     <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
