@@ -7,7 +7,7 @@ const Stats = () => {
 
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState("na");
-  const [selectedTimespan, setSelectedTimespan] = useState("60");
+  const [selectedTimespan, setSelectedTimespan] = useState("'all'");
   const [minRounds, setMinRounds] = useState("200");
   const [sortBy, setSortBy] = useState("rating");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -28,10 +28,11 @@ const Stats = () => {
   ];
 
   const timespans = [
+    { key: "'all'", name: "All time" },
     { key: "30", name: "Past 30 days" },
     { key: "60", name: "Past 60 days" },
     { key: "90", name: "Past 90 days" },
-    { key: "all", name: "All time" },
+    
   ];
 
   // Fetch stats data
@@ -182,7 +183,7 @@ const Stats = () => {
               >
                 {regions.map(({ key, name, flag }) => (
                   <option key={key} value={key}>
-                    {flag} {name}
+                     {name}
                   </option>
                 ))}
               </select>
