@@ -168,7 +168,7 @@ const Stats = () => {
       </div>
 
       {/* Filters Section */}
-      <div className="max-w-7xl mx-auto px-4 mb-8">
+      <div className="max-w-7xl mx-auto px-4 my-8">
         <div className="bg-black/60 border border-red-800 rounded-2xl p-6 shadow-2xl">
           <h3 className="text-xl font-bold text-red-400 mb-4 uppercase">Filters</h3>
           
@@ -242,6 +242,24 @@ const Stats = () => {
           >
             Apply Filters
           </button>
+        </div>
+      </div>
+       {/* Stats Legend */}
+       <div className="max-w-7xl mx-auto px-4 my-8">
+        <div className="bg-black/60 border border-gray-800 rounded-lg p-4">
+          <h4 className="text-sm font-bold text-red-400 mb-2">STAT ABBREVIATIONS:</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs text-gray-400">
+            <div><span className="text-red-300">ACS:</span> Average Combat Score</div>
+            <div><span className="text-red-300">K:D:</span> Kill:Death Ratio</div>
+            <div><span className="text-red-300">KAST:</span> Kill:Assist:Survive:Trade%</div>
+            <div><span className="text-red-300">ADR:</span> Average Damage per Round</div>
+            <div><span className="text-red-300">KPR:</span> Kills per Round</div>
+            <div><span className="text-red-300">APR:</span> Assists per Round</div>
+            <div><span className="text-red-300">FKPR:</span> First Kills per Round</div>
+            <div><span className="text-red-300">FDPR:</span> First Deaths per Round</div>
+            <div><span className="text-red-300">HS%:</span> Headshot Percentage</div>
+            <div><span className="text-red-300">CL%:</span> Clutch Success %</div>
+          </div>
         </div>
       </div>
 
@@ -438,24 +456,7 @@ const Stats = () => {
         )}
       </div>
 
-      {/* Stats Legend */}
-      <div className="max-w-7xl mx-auto px-4 mt-8">
-        <div className="bg-black/60 border border-gray-800 rounded-lg p-4">
-          <h4 className="text-sm font-bold text-red-400 mb-2">STAT ABBREVIATIONS:</h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs text-gray-400">
-            <div><span className="text-red-300">ACS:</span> Average Combat Score</div>
-            <div><span className="text-red-300">K:D:</span> Kill:Death Ratio</div>
-            <div><span className="text-red-300">KAST:</span> Kill/Assist/Survive/Trade %</div>
-            <div><span className="text-red-300">ADR:</span> Average Damage per Round</div>
-            <div><span className="text-red-300">KPR:</span> Kills per Round</div>
-            <div><span className="text-red-300">APR:</span> Assists per Round</div>
-            <div><span className="text-red-300">FKPR:</span> First Kills per Round</div>
-            <div><span className="text-red-300">FDPR:</span> First Deaths per Round</div>
-            <div><span className="text-red-300">HS%:</span> Headshot Percentage</div>
-            <div><span className="text-red-300">CL%:</span> Clutch Success %</div>
-          </div>
-        </div>
-      </div>
+     
     </div>
   );
 };

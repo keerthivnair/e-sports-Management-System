@@ -106,7 +106,8 @@ const Rankings = () => {
                 {/* Team Name */}
                 <div className="ml-8 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                  <img src={logo} alt={team} className="w-12 h-12 object-contain rounded-full" />
+                    {logo!='' && (
+                  <img src={(logo!='') ? logo : ''} alt={team} className="w-12 h-12 object-contain rounded-full" />)}
                   <h3 className="text-2xl md:text-4xl font-black text-white tracking-wider uppercase group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-400 group-hover:to-white transition-all duration-300">
                     {team}
                   </h3>

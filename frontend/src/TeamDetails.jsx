@@ -125,7 +125,7 @@ const TeamDetails = () => {
         <div className="flex justify-center space-x-4">
           <button
             onClick={() => setActiveTab("members")}
-            className={`px-8 py-3 rounded-lg font-bold uppercase text-sm tracking-wider transition-all duration-300 transform hover:scale-105 ${
+            className={`px-8 py-3 rounded-lg cursor-pointer font-bold uppercase text-sm tracking-wider transition-all duration-300 transform hover:scale-105 ${
               activeTab === "members"
                 ? "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -333,7 +333,7 @@ const TeamDetails = () => {
               </div>
               <button
                 onClick={closeModal}
-                className="w-10 h-10 bg-red-600 hover:bg-red-500 rounded-lg flex items-center justify-center transition-colors duration-300"
+                className="w-10 h-10 bg-red-600 cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-red-500 rounded-lg flex items-center justify-center transition-colors duration-300"
               >
                 <svg
                   className="w-6 h-6 text-white"
@@ -434,15 +434,7 @@ const TeamDetails = () => {
               </div>
             </div>
 
-            {/* Close Button */}
-            <div className="mt-8 flex justify-center">
-              <button
-                onClick={closeModal}
-                className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-red-500/50"
-              >
-                Close
-              </button>
-            </div>
+
           </div>
         </div>
       )}

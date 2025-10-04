@@ -6,11 +6,11 @@ const Navbar = () => {
   const location = useLocation();
 
   const navLinks = [
-    { path: "/stats", name: "Stats", icon: "📊" },
+    { path: "/matches/na", name: "Matches", icon: "⚔️" },
     { path: "/events", name: "Events", icon: "🎮" },
-    // { path: "/matches", name: "Matches", icon: "⚔️" },
     { path: "/rankings/na", name: "Rankings", icon: "🏆" },
-    { path: "/recommendations", name: "Recommendations", icon: "💡" },
+    { path: "/stats", name: "Stats", icon: "📊" },
+    { path: "/recommendations", name: "Recommendations", icon: "💡" }
   ];
 
   const isActive = (path) => {
@@ -32,7 +32,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center gap-2">
             {navLinks.map(({ path, name, icon }) => (
               <Link
                 key={path}
